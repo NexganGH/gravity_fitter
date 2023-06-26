@@ -3,7 +3,7 @@ from .constants import G
 from .engine import evolve, apply_gravity
 import numpy as np
 import numpy.linalg as alg
-
+import copy
 
 def simulate_radius(bodies: np.ndarray[Body], time: np.ndarray[float], step: float,
                     v1: np.ndarray, v2: np.ndarray
@@ -17,8 +17,12 @@ def simulate_radius(bodies: np.ndarray[Body], time: np.ndarray[float], step: flo
     :param step: Time interval to use in the simulation. The smaller, the more accurate. In seconds.
     :return: the radius.
     """
+    print('simulate with ' + str(v1) + ' ' + str(v2))
 
     max_time: float = np.max(time)
+
+    old_0 = copy.copy(bodies[0])
+    old_1 = copy.copy(bodies[1])
 
     bodies[0].set_velocity(v1)
     bodies[1].set_velocity(v2)
@@ -34,14 +38,16 @@ def simulate_radius(bodies: np.ndarray[Body], time: np.ndarray[float], step: flo
 
         current_time += step
 
+        radius = alg.norm(bodies[0].get_position() - bodies[1].get_position())
+
         keep = np.ones(time.shape, dtype=bool)
         for index, t in enumerate(time):
             if current_time >= t:
-                radius = alg.norm(bodies[0].get_position() - bodies[1].get_position())
                 results.append(radius)
                 keep[index] = False
 
         time = time[keep]
 
 
+    print('results (mean)=' + str(np.mean(results)) + ' #=' + str(len(results)))
     return np.array(results)
