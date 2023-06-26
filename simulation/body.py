@@ -7,7 +7,10 @@ class Body:
         self.mass = mass
         self.position = position
         self.velocity = velocity
-        self.acceleration = np.array([0, 0])
+        self.force = np.array([0, 0])
+
+    def get_mass(self) -> float:
+        return self.mass
 
     def set_position(self, position: ndarray) -> None:
         self.position = position
@@ -21,8 +24,14 @@ class Body:
     def set_velocity(self, velocity: ndarray) -> None:
         self.velocity = velocity
 
-    def get_acceleration(self) -> ndarray:
-        return self.acceleration
+    def get_force(self) -> ndarray:
+        return self.force
 
-    def set_acceleration(self, acceleration: ndarray) -> None:
-        self.acceleration = acceleration
+    def set_force(self, force: ndarray) -> None:
+        self.force = force
+
+    def add_force(self, force: ndarray) -> None:
+        self.force = self.force + force
+
+    def reset_forces(self) -> None:
+        self.force = np.array([0, 0], dtype=float)
