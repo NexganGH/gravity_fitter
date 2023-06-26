@@ -17,10 +17,11 @@ x_space = np.linspace(0, SECONDS, CHECKS)
 
 
 
-popt, _ = opt.curve_fit(fitter.fit_func, x_space, np.full(CHECKS, DESIRED_DISTANCE), p0=STARTING_VELOCITY)
+popt, _ = opt.curve_fit(fitter.fit_func, x_space, np.full(CHECKS, DESIRED_DISTANCE),
+                        p0=(STARTING_VELOCITY))
 
 print('BEST VALUES ARE v1=(' + str(popt[0]) + ', ' + str(popt[1]) + ')')
-
+#print('BEST VALUES ARE m1=' + str(popt[2]) + ' m2=' + str(popt[3]))
 
 # Creating 2 subplots. One is to see the radius changing with time, the other display the two bodies in (x,y)
 fig, p = plots.subplots(2)
@@ -31,14 +32,14 @@ p0.plot(x_space, fitter.fit_func(x_space, *popt))
 
 
 p1 = p[1]
-p1.set_xlim(0, 1000)
-p1.set_ylim(0, 1000)
+p1.set_xlim(0, 2000)
+p1.set_ylim(0, 2000)
 step = SECONDS / CHECKS
 graph, = p1.plot(5, 5, 'o')
 
 current_time: float = 0.0
 
-bodies = create_bodies(*popt)
+bodies = create_bodies(*popt, M1, M2)
 while True:
     for i in range(0, len(bodies) - 1):
         for j in range(i+1, len(bodies)):
@@ -50,6 +51,8 @@ while True:
         evolve(step, body)
 
     current_time += step
+    p1.relim()
+    p1.autoscale()
     plots.draw()
     plots.pause(step / SIM_SPEED)
 

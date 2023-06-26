@@ -48,6 +48,5 @@ def simulate_radius(bodies: np.ndarray[Body], time: np.ndarray[float], step: flo
 
         time = time[keep]
 
-
     print('results (mean)=' + str(np.mean(results)) + ' #=' + str(len(results)))
     return np.array(results)
